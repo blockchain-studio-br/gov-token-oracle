@@ -1,0 +1,10 @@
+{
+  "name": "gov-token-oracle",
+  "version": "0.0.1",
+  "description": "Is a oracle to validate e-CNPJ transactions",
+  "main": "index.js",
+  "repository": "git@bitbucket.org:investtools/gov-token-oracle.git",
+  "author": "Fabiano <fabiano.paula.martins@gmail.com>",
+  "license": "MIT",
+  "private": true
+}
