@@ -6,5 +6,15 @@
   "repository": "git@bitbucket.org:investtools/gov-token-oracle.git",
   "author": "Fabiano <fabiano.paula.martins@gmail.com>",
   "license": "MIT",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "consign": "^0.1.6",
+    "express": "^4.17.1",
+    "mongoose": "^5.6.0",
+    "web3": "^1.0.0-beta.55"
+  },
+  "scripts": {
+    "start": "node app.js"
+  }
 }
