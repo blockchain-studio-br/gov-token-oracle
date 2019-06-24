@@ -5,5 +5,5 @@ var port = 3000;
 http
 	.createServer(app)
 	.listen(port, () => {
-	    console.log("Servidor iniciadona porta " + port);
+	    console.log("Server Initialized on port " + port);
 	});

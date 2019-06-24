@@ -1,8 +1,9 @@
 module.exports = function(app) {
- 
-    app.route('/')
-        .get(function(req, res) {
-		  res.send('It\'s Running!');
-		});
+ 	
+ 	var api = app.api;
+
+    app
+    	.route('/')
+    	.get(api.validator.index);
 
 };
