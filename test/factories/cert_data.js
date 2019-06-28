@@ -1,11 +1,8 @@
 import { factory } from 'factory-bot';
-import { CPF, CNPJ } from 'cpf_cnpj';
+import { CNPJ } from 'cpf_cnpj';
 import moment from 'moment';
-import generateRSAKeypair from 'generate-rsa-keypair';
-
-import CryptoJS from 'crypto-js';
+import fs from 'fs';
 import forge    from 'node-forge';
-import crypto   from 'crypto';
 
 import { generateSelfSigned, generateForHost } from '../utils/generateCertificate';
 
@@ -353,4 +350,26 @@ factory.define('cert_data_cas_list_with_three_certificates', {}, async (opts) =>
     	// public_key: pair.public
 	};
 });
+
+factory.define('cert_data_cas_list_with_lumini', {}, async (opts) => {
+	let certificate1 = fs.readFileSync('./test/data/certificate1.pem').toString();
+	let certificate2 = fs.readFileSync('./test/data/certificate2.pem').toString();
+	let certificate3 = fs.readFileSync('./test/data/certificate3.pem').toString();
+	let certificate  = fs.readFileSync('./test/data/certificate.pem').toString();
+	
+	return {
+		identification_document: CNPJ.generate(),
+    	expiration_date: moment().subtract(2,'days').format("YYYY-MM-DD"), 
+    	certificate: certificate,
+    	cas_list: [
+    		certificate3,
+    		certificate2,
+    		certificate1
+    	]
+    	// signature: signature_hex,
+    	// message,
+    	// public_key: pair.public
+	};
+});
+
 

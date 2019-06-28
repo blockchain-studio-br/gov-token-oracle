@@ -95,6 +95,13 @@ describe('Validation certificate', async () => {
     expect(validation(cert_data, user_input)).to.be.true
   });
 
+  it("expect to be true with a cas_list with lumini in a ca_list ", async () => {
+    const cert_data = await factory.attrs('cert_data_cas_list_with_lumini');
+    const user_input = { identification_document: cert_data.identification_document };
+
+    expect(validation(cert_data, user_input)).to.be.true
+  });
+
   it("expect to be false with a random cas_list that not signed a certificate ca_list ", async () => {
     const cert_data = await factory.attrs('with_random_cas_list_cert_data');
     const user_input = { identification_document: cert_data.identification_document };
