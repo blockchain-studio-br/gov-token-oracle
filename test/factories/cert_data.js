@@ -4,7 +4,11 @@ import moment from 'moment';
 import fs from 'fs';
 import forge    from 'node-forge';
 
-import { generateSelfSigned, generateForHost } from '../utils/generateCertificate';
+import { 
+	generateSelfSigned,
+	generateForHost,
+	generateExpiredCertificate
+} from '../utils/generateCertificate';
 
 factory.define('cert_data', {}, async (opts) => {
 	
@@ -19,7 +23,7 @@ factory.define('cert_data', {}, async (opts) => {
 		], "1");
 
 	const certificate = generateForHost(
-		caCertificate.privateKey,
+		caCertificate.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 
 			{ name: 'organizationName', value: 'my-app' }
@@ -32,13 +36,12 @@ factory.define('cert_data', {}, async (opts) => {
 			{ name: 'organizationName', value: 'Test' },
 			{ shortName: 'OU', value: 'Test' }
 		], "2")
-	
+
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().subtract(2,'days').format("YYYY-MM-DD"), 
-    	certificate: certificate.certificate,
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
     	cas_list: [
-    		caCertificate.certificate
+    		forge.pki.certificateToPem(caCertificate.certificate)
     	]
     	// signature: signature_hex,
     	// message,
@@ -58,8 +61,8 @@ factory.define('expired_cert_data', {}, async (opts) => {
 		{ shortName: 'OU', value: 'Test' }
 		], "1");
 
-	const certificate = generateForHost(
-		caCertificate.privateKey,
+	const certificate = generateExpiredCertificate(
+		caCertificate.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 
 			{ name: 'organizationName', value: 'my-app' }
@@ -68,12 +71,15 @@ factory.define('expired_cert_data', {}, async (opts) => {
 			{ name: 'commonName', value: 'my-app' },
 			{ name: 'organizationName', value: 'my-app' }
 		], "2")
+
+
 	
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().add(2,'days').format("YYYY-MM-DD"), 
-    	certificate: certificate.certificate,
-    	cas_list: [ caCertificate.certificate ]
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
+    	cas_list: [
+    		forge.pki.certificateToPem(caCertificate.certificate)
+    	]
     	// signature: signature_hex,
     	// message,
     	// public_key: pair.public
@@ -93,7 +99,7 @@ factory.define('today_expired_cert_data', {}, async (opts) => {
 		], "1");
 
 	const certificate = generateForHost(
-		caCertificate.privateKey,
+		caCertificate.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 
 			{ name: 'organizationName', value: 'my-app' }
@@ -109,9 +115,10 @@ factory.define('today_expired_cert_data', {}, async (opts) => {
 	
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().format("YYYY-MM-DD"), 
-    	certificate: certificate.certificate,
-    	cas_list: [ caCertificate.certificate ]
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
+    	cas_list: [ 
+    		forge.pki.certificateToPem(caCertificate.certificate)
+    	]
     	// signature: signature_hex,
     	// message,
     	// public_key: pair.public
@@ -131,7 +138,7 @@ factory.define('with_undefined_cas_list_cert_data', {}, async (opts) => {
 		], "1");
 
 	const certificate = generateForHost(
-		caCertificate.privateKey,
+		caCertificate.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 
 			{ name: 'organizationName', value: 'my-app' }
@@ -144,8 +151,7 @@ factory.define('with_undefined_cas_list_cert_data', {}, async (opts) => {
 	
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().subtract(2,'days').format("YYYY-MM-DD"), 
-    	certificate: certificate.certificate,
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
     	cas_list: undefined
     	// signature: signature_hex,
     	// message,
@@ -167,8 +173,7 @@ factory.define('with_empty_cas_list_cert_data', {}, async (opts) => {
 	
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().subtract(2,'days').format("YYYY-MM-DD"), 
-    	certificate: certificate.certificate,
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
     	cas_list: []
     	// signature: signature_hex,
     	// message,
@@ -190,9 +195,10 @@ factory.define('cert_data_with_certificate_in_cas_list', {}, async (opts) => {
 	
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().subtract(2,'days').format("YYYY-MM-DD"), 
-    	certificate: certificate.certificate,
-    	cas_list: [ certificate.certificate ]
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
+    	cas_list: [ 
+    		forge.pki.certificateToPem(certificate.certificate)
+    	]
     	// signature: signature_hex,
     	// message,
     	// public_key: pair.public
@@ -224,9 +230,10 @@ factory.define('with_random_cas_list_cert_data', {}, async (opts) => {
 	
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().subtract(2,'days').format("YYYY-MM-DD"), 
-    	certificate: certificate.certificate,
-    	cas_list: [ caCertificate.certificate ]
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
+    	cas_list: [
+    		forge.pki.certificateToPem(caCertificate.certificate)
+    	]
     	// signature: signature_hex,
     	// message,
     	// public_key: pair.public
@@ -246,7 +253,7 @@ factory.define('cert_data_cas_list_with_two_certificates', {}, async (opts) => {
 		],"1");
 
 	const caCertificate2 = generateForHost(
-		caCertificate1.privateKey,
+		caCertificate1.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 
 			{ name: 'organizationName', value: 'my-app' }
@@ -262,7 +269,7 @@ factory.define('cert_data_cas_list_with_two_certificates', {}, async (opts) => {
 		,"2")
 
 	const certificate = generateForHost(
-		caCertificate2.privateKey,
+		caCertificate2.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 
 			{ name: 'organizationName', value: 'my-app' }
@@ -275,11 +282,10 @@ factory.define('cert_data_cas_list_with_two_certificates', {}, async (opts) => {
 	
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().subtract(2,'days').format("YYYY-MM-DD"), 
-    	certificate: certificate.certificate,
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
     	cas_list: [
-    		caCertificate2.certificate,
-    		caCertificate1.certificate
+    		forge.pki.certificateToPem(caCertificate2.certificate),
+    		forge.pki.certificateToPem(caCertificate1.certificate)
     	]
     	// signature: signature_hex,
     	// message,
@@ -300,7 +306,7 @@ factory.define('cert_data_cas_list_with_three_certificates', {}, async (opts) =>
 		], "1");
 
 	const caCertificate2 = generateForHost(
-		caCertificate1.privateKey,
+		caCertificate1.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 
 			{ name: 'organizationName', value: 'my-app' }
@@ -315,7 +321,7 @@ factory.define('cert_data_cas_list_with_three_certificates', {}, async (opts) =>
 		], "2")
 
 	const caCertificate3 = generateForHost(
-		caCertificate2.privateKey,
+		caCertificate2.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 
 			{ name: 'organizationName', value: 'my-app' }
@@ -326,7 +332,7 @@ factory.define('cert_data_cas_list_with_three_certificates', {}, async (opts) =>
 		], "3")
 
 	const certificate = generateForHost(
-		caCertificate3.privateKey,
+		caCertificate3.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 
 			{ name: 'organizationName', value: 'my-app' }
@@ -338,12 +344,11 @@ factory.define('cert_data_cas_list_with_three_certificates', {}, async (opts) =>
 	
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().subtract(2,'days').format("YYYY-MM-DD"), 
-    	certificate: certificate.certificate,
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
     	cas_list: [
-    		caCertificate3.certificate,
-    		caCertificate2.certificate,
-    		caCertificate1.certificate
+    		forge.pki.certificateToPem(caCertificate3.certificate),
+    		forge.pki.certificateToPem(caCertificate2.certificate),
+    		forge.pki.certificateToPem(caCertificate1.certificate)
     	]
     	// signature: signature_hex,
     	// message,
@@ -359,7 +364,6 @@ factory.define('cert_data_cas_list_with_lumini', {}, async (opts) => {
 	
 	return {
 		identification_document: CNPJ.generate(),
-    	expiration_date: moment().subtract(2,'days').format("YYYY-MM-DD"), 
     	certificate: certificate,
     	cas_list: [
     		certificate3,
@@ -372,4 +376,25 @@ factory.define('cert_data_cas_list_with_lumini', {}, async (opts) => {
 	};
 });
 
+factory.define('cert_data_cas_list_with_lumini_tbscerftificate_changed', {}, async (opts) => {
+	let certificate1 = fs.readFileSync('./test/data/certificate1.pem').toString();
+	let certificate2 = fs.readFileSync('./test/data/certificate2.pem').toString();
+	let certificate3 = fs.readFileSync('./test/data/certificate3.pem').toString();
+	let certificate  = fs.readFileSync('./test/data/certificate.pem').toString();
+
+	let cert = forge.pki.certificateFromPem(certificate);
+	
+	return {
+		identification_document: CNPJ.generate(),
+    	certificate: certificate,
+    	cas_list: [
+    		certificate3,
+    		certificate2,
+    		certificate1
+    	]
+    	// signature: signature_hex,
+    	// message,
+    	// public_key: pair.public
+	};
+});
 

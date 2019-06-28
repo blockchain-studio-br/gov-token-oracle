@@ -109,4 +109,12 @@ describe('Validation certificate', async () => {
     expect(validation(cert_data, user_input)).to.be.false
   });
 
+
+  // it("expect to be false with a cas_list with lumini in a ca_list when tbscertificate is wrong ", async () => {
+  //   const cert_data = await factory.attrs('cert_data_cas_list_with_lumini_tbscerftificate_changed');
+  //   const user_input = { identification_document: cert_data.identification_document };
+
+  //   expect(validation(cert_data, user_input)).to.be.false
+  // });
+
 });
