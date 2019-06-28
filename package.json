@@ -2,7 +2,7 @@
   "name": "gov-token-oracle",
   "version": "0.0.1",
   "description": "Is a oracle to validate e-CNPJ transactions",
-  "main": "lib/index.js",
+  "main": "index.js",
   "repository": "git@bitbucket.org:investtools/gov-token-oracle.git",
   "author": "Fabiano <fabiano.paula.martins@gmail.com>",
   "license": "MIT",
@@ -14,17 +14,25 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
+    "crypto": "^1.0.1",
     "crypto-js": "^3.1.9-1",
+    "ethers": "^4.0.31",
+    "generate-rsa-keypair": "^0.2.1",
     "moment": "^2.24.0",
+    "node-forge": "^0.8.5",
     "web3": "^1.0.0-beta.55"
   },
   "scripts": {
-    "test": "NODE_ENV=test mocha --recursive --require babel-register test -t 10000"
+    "test": "NODE_ENV=test mocha --recursive --require babel-register test -t 10000",
+    "start:dev": "node scripts/dev-start.js"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "cpf_cnpj": "^0.2.0",
+    "ethereum-waffle": "^2.0.12",
     "factory-bot": "^6.1.4",
-    "mocha": "^6.1.4"
+    "ganache-core": "^2.5.6",
+    "mocha": "^6.1.4",
+    "pryjs": "^1.0.3"
   }
 }
