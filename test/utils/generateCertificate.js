@@ -107,6 +107,46 @@ export function generateExpiredCertificate(
     });
 }
 
+export function generateTodayExpiredCertificate(
+        privateKey, 
+        attrsSubject, 
+        attrsIssuer,
+        serialNumber = '01'
+    ) {
+
+    let notBefore = new Date((new Date()).setFullYear((new Date()).getFullYear() - 1));
+    let notAfter = new Date((new Date()).setHours((new Date()).getHours() + 1));  
+
+    return generateCertificate({
+        privateKey,
+        attrsSubject,
+        attrsIssuer,
+        notBefore,
+        notAfter,
+        serialNumber
+    });
+}
+
+export function generateTodayStartCertificate(
+        privateKey, 
+        attrsSubject, 
+        attrsIssuer,
+        serialNumber = '01'
+    ) {
+
+    let notBefore = new Date();
+    let notAfter = new Date((new Date()).setFullYear((new Date()).getFullYear() + 1));  
+
+    return generateCertificate({
+        privateKey,
+        attrsSubject,
+        attrsIssuer,
+        notBefore,
+        notAfter,
+        serialNumber
+    });
+}
+
 export function generateCertificate({
     privateKey, 
     attrsSubject, 
@@ -136,5 +176,7 @@ export default {
     generateForHost,
     generateSelfSigned, 
     generateCertificate,
-    generateExpiredCertificate
+    generateExpiredCertificate, 
+    generateTodayExpiredCertificate,
+    generateTodayStartCertificate
 };

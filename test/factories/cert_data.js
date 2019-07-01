@@ -7,7 +7,9 @@ import forge    from 'node-forge';
 import { 
 	generateSelfSigned,
 	generateForHost,
-	generateExpiredCertificate
+	generateExpiredCertificate,
+	generateTodayExpiredCertificate,
+	generateTodayStartCertificate
 } from '../utils/generateCertificate';
 
 factory.define('cert_data', {}, async (opts) => {
@@ -98,7 +100,46 @@ factory.define('today_expired_cert_data', {}, async (opts) => {
 			{ shortName: 'OU', value: 'Test' }
 		], "1");
 
-	const certificate = generateForHost(
+	const certificate = generateTodayExpiredCertificate(
+		caCertificate.keys.privateKey,
+		[
+			{ name: 'commonName', value: 'test' }, 
+			{ name: 'organizationName', value: 'my-app' }
+		],
+		[
+			{ name: 'commonName', value: 'example.org' },
+		 	{ name: 'countryName', value: 'US' },
+			{ shortName: 'ST', value: 'Virginia' },
+			{ name: 'localityName', value: 'Blacksburg' },
+			{ name: 'organizationName', value: 'Test' },
+			{ shortName: 'OU', value: 'Test' }
+		] ,"2")
+	
+	return {
+		identification_document: CNPJ.generate(),
+    	certificate: forge.pki.certificateToPem(certificate.certificate),
+    	cas_list: [ 
+    		forge.pki.certificateToPem(caCertificate.certificate)
+    	]
+    	// signature: signature_hex,
+    	// message,
+    	// public_key: pair.public
+	};
+});
+
+factory.define('today_start_cert_data', {}, async (opts) => {
+	
+	const caCertificate = generateSelfSigned(
+		[
+			{ name: 'commonName', value: 'example.org' },
+		 	{ name: 'countryName', value: 'US' },
+			{ shortName: 'ST', value: 'Virginia' },
+			{ name: 'localityName', value: 'Blacksburg' },
+			{ name: 'organizationName', value: 'Test' },
+			{ shortName: 'OU', value: 'Test' }
+		], "1");
+
+	const certificate = generateTodayStartCertificate(
 		caCertificate.keys.privateKey,
 		[
 			{ name: 'commonName', value: 'test' }, 

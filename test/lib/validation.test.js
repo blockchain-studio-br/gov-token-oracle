@@ -25,22 +25,29 @@ describe('Validation certificate', async () => {
     expect(validation(cert_data, user_input)).to.be.true
   });
 
-  it("expect to be true if data not expired", async () => {
+  it("expect to be true if validity period not expired", async () => {
     const cert_data = await factory.attrs('cert_data');
     const user_input = { identification_document: cert_data.identification_document };
 
     expect(validation(cert_data, user_input)).to.be.true
   });
 
-  it("expect to be false if data is expired", async () => {
+  it("expect to be false if validity period is expired", async () => {
     const cert_data = await factory.attrs('expired_cert_data');
     const user_input = { identification_document: cert_data.identification_document };
 
     expect(validation(cert_data, user_input)).to.be.false
   });
 
-  it("expect to be true if data expires today", async () => {
+  it("expect to be true if validity period expires today", async () => {
     const cert_data = await factory.attrs('today_expired_cert_data');
+    const user_input = { identification_document: cert_data.identification_document };
+
+    expect(validation(cert_data, user_input)).to.be.true
+  });
+
+  it("expect to be true if validity period starts today", async () => {
+    const cert_data = await factory.attrs('today_start_cert_data');
     const user_input = { identification_document: cert_data.identification_document };
 
     expect(validation(cert_data, user_input)).to.be.true
