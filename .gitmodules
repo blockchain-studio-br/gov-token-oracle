@@ -1,0 +1,3 @@
+[submodule "govtoken-contracts"]
+	path = govtoken-contracts
+	url = git@bitbucket.org:investtools/govtoken-contracts.git
