@@ -38,15 +38,15 @@ function runOracle(vars) {
 
 async function start() {
   	const jsonRpcUrl = await startGanache(ganachePort, {});
-  	const provider = new providers.JsonRpcProvider(jsonRpcUrl);
+    const provider = new providers.JsonRpcProvider(jsonRpcUrl);
   	const [deployWallet] = await getWallets(provider);
   	const govTokenAddress = await deployGovTokenContract(deployWallet, provider);
   
   	runOracle({
-		CONTRACT_ABI: GovToken.abi,
-		CONTRACT_ADDRESS: govTokenAddress,
-		CONTRACT_EVENT: "",
-		PROVIDER_UR: jsonRpcUrl
+      CONTRACT_ABI: JSON.stringify(GovToken.abi),
+  		CONTRACT_ADDRESS: govTokenAddress,
+  		CONTRACT_EVENT: "",
+  		PROVIDER_URL: jsonRpcUrl
   	});
 }
 

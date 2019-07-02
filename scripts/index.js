@@ -1,5 +1,4 @@
 import Web3 from 'web3';
-
 import config from '../config';
 
 export function printEnv(envs) {
@@ -10,7 +9,7 @@ export function printEnv(envs) {
   console.log('');
 }
 
-function runApp(){
+async function runApp(){
 	printEnv(config);
 	var abi = config.abi;
 	var contractAddress = config.contractAddress;
@@ -37,4 +36,4 @@ function runApp(){
 	});
 }
 
-export default runApp;
+runApp().catch(console.log)
