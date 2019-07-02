@@ -20,7 +20,7 @@
   "scripts": {
     "build": "waffle .waffle.js",
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --recursive --require @babel/register test",
-    "start": "nodemon --exec babel-node src/server.js",
+    "start": "nodemon --exec babel-node scripts/index.js",
     "start:dev": "babel-node scripts/dev-start.js"
   },
   "devDependencies": {
