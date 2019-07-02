@@ -8,31 +8,38 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-0": "^6.24.1",
-    "babel-register": "^6.26.0",
+    "core-js": "3",
     "crypto": "^1.0.1",
     "crypto-js": "^3.1.9-1",
     "ethers": "^4.0.31",
-    "generate-rsa-keypair": "^0.2.1",
     "moment": "^2.24.0",
     "node-forge": "^0.8.5",
+    "openzeppelin-solidity": "blockchain-studio-br/openzeppelin-solidity#3fb98be63b078f5527de952341e1d91244c1e234",
     "web3": "^1.0.0-beta.55"
   },
   "scripts": {
-    "test": "NODE_ENV=test mocha --recursive --require babel-register test -t 10000",
-    "start:dev": "node scripts/dev-start.js"
+    "build": "waffle .waffle.js",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --recursive --require @babel/register test",
+    "start": "nodemon --exec babel-node src/server.js",
+    "start:dev": "babel-node scripts/dev-start.js"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/node": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
     "chai": "^4.2.0",
     "cpf_cnpj": "^0.2.0",
     "ethereum-waffle": "^2.0.12",
     "factory-bot": "^6.1.4",
     "ganache-core": "^2.5.6",
     "mocha": "^6.1.4",
+    "nodemon": "^1.19.1",
     "pryjs": "^1.0.3"
+  },
+  "engines": {
+    "node": "10.15",
+    "yarn": ">=1.9.4"
   }
 }
